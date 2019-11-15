@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 自定义星星属性 -->
+    <declare-styleable name="star">
+        //星星数量
+        <attr name="starsNum" format="integer" />
+        //星星宽度
+        <attr name="starWidth" format="dimension" />
+        //星星高度
+        <attr name="starHeight" format="dimension" />
+        //星星间距
+        <attr name="starDistance" format="dimension" />
+        //星星背景
+        <attr name="starBackground" format="reference" />
+        //星星变化背景
+        <attr name="starDrawBackground" format="reference" />
+        //控件是否可以点击
+        <attr name="starClickable" format="boolean" />
+
+    </declare-styleable>
+</resources>
