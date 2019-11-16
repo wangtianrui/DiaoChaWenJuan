@@ -53,4 +53,11 @@ public class WebUtils {
         Call call = mClient.newCall(request);
         call.enqueue(callback);
     }
+
+    public void loginAndRegister(HashMap<String, String> hashMap, Callback callback) {
+        Request request = new Request.Builder().post(getRequestBody(hashMap))
+                .url(ConstantUtils.host + "/android/register_login").build();
+        Call call = mClient.newCall(request);
+        call.enqueue(callback);
+    }
 }

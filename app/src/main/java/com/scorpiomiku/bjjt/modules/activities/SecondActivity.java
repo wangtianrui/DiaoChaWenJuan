@@ -47,10 +47,7 @@ public class SecondActivity extends BaseActivity {
 
     private FragmentPagerAdapter adapter;
     private int fragmentIndex = 0;
-    //    private SecondActivity secondActivity;
-//    private AudioUtils audioUtils;
-//    private String[] musics = {"http://39.96.162.42/get_audio_src?filename=1 (1).mp3",
-//            "https://wangtianrui.top:4430/get_audio_src?filename=1 (2).mp3"};
+
 
     private MediaPlayer player;
 

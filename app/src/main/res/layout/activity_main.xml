@@ -66,7 +66,6 @@
                             android:id="@+id/radio0"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
                             android:text="男"
                             android:textColor="#FFF"
                             android:textSize="13sp" />
@@ -100,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="给自己起个名字："
+                    android:text="给自己起个名字\n(默认会随机给个)"
                     android:textColor="#FFF" />
 
                 <EditText
