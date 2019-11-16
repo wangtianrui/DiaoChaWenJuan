@@ -1,8 +1,6 @@
 package com.scorpiomiku.bjjt.modules.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
@@ -14,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,19 +20,25 @@ import com.scorpiomiku.bjjt.R;
 import com.scorpiomiku.bjjt.adapter.QAAdapter;
 import com.scorpiomiku.bjjt.base.BaseFragment;
 import com.scorpiomiku.bjjt.bean.MyAudio;
+import com.scorpiomiku.bjjt.bean.User;
 import com.scorpiomiku.bjjt.modules.activities.SecondActivity;
+import com.scorpiomiku.bjjt.utils.ChangeUtils;
 import com.scorpiomiku.bjjt.utils.ConstantUtils;
 import com.scorpiomiku.bjjt.utils.MessageUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class SurveyFragment extends BaseFragment {
     @BindView(R.id.pause_music)
@@ -47,12 +52,19 @@ public class SurveyFragment extends BaseFragment {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     Unbinder unbinder;
+    @BindView(R.id.total_num)
+    TextView totalNum;
+    @BindView(R.id.next)
+    Button next;
 
+    private User user;
     private List<String> questions = new ArrayList<>();
     private QAAdapter adapter;
     private MyAudio myAudio;
     private int index;
     private MediaPlayer player;
+    private float[] answers;
+    private String answer;
 
     public void setQuestions(List<String> questions) {
         this.questions = questions;
@@ -70,12 +82,17 @@ public class SurveyFragment extends BaseFragment {
         this.player = player;
     }
 
-    public static SurveyFragment newInstance(List<String> questions, MyAudio myAudio, int index, MediaPlayer player) {
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public static SurveyFragment newInstance(List<String> questions, MyAudio myAudio, int index, MediaPlayer player, User user) {
         SurveyFragment surveyFragment = new SurveyFragment();
         surveyFragment.setQuestions(questions);
         surveyFragment.setMyAudio(myAudio);
         surveyFragment.setIndex(index);
         surveyFragment.setPlayer(player);
+        surveyFragment.setUser(user);
         return surveyFragment;
     }
 
@@ -88,6 +105,7 @@ public class SurveyFragment extends BaseFragment {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case 1:
+                        ((SecondActivity) getActivity()).onNextFragment();
                         break;
                 }
             }
@@ -107,15 +125,18 @@ public class SurveyFragment extends BaseFragment {
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
-        adapter = new QAAdapter(getContext(), questions, myAudio);
+        adapter = new QAAdapter(getContext(), questions, myAudio, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        if (index == 0) {
+        if (index == ConstantUtils.lastIndex) {
             starMusic();
         }
         percentNum.setText(myAudio.getAudio_id() + "");
         audioName.setText(myAudio.getAudio_name());
+        totalNum.setText("/" + ConstantUtils.totalAudioNumber);
+        answers = new float[questions.size()];
+        Arrays.fill(answers, -1);
     }
 
     @Override
@@ -142,7 +163,12 @@ public class SurveyFragment extends BaseFragment {
                 starMusic();
                 break;
             case R.id.next:
-                ((SecondActivity) getActivity()).onNextFragment();
+                if (answer.equals("x")) {
+                    MessageUtils.makeToast("问题还没有回答完哟~不能有空哟~");
+                } else {
+                    upAnswer();
+                    handler.sendEmptyMessage(1);
+                }
         }
     }
 
@@ -173,6 +199,30 @@ public class SurveyFragment extends BaseFragment {
         playMusic.setVisibility(View.VISIBLE);
         pauseMusic.setVisibility(View.INVISIBLE);
         player.pause();
+    }
+
+    public void changeScore(float score, int index) {
+        answers[index] = score;
+        answer = ChangeUtils.array2String(answers);
+        MessageUtils.logd(answer + ":" + myAudio.getAudio_name());
+    }
+
+    private void upAnswer() {
+        HashMap<String, String> data = getData();
+        data.put("audioName", myAudio.getAudio_name());
+        data.put("answer", answer);
+        data.put("userId", user.getId() + "");
+        webUtils.upAnswer(data, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
     }
 
 

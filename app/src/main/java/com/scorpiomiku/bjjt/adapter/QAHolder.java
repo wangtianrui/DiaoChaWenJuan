@@ -27,7 +27,7 @@ public class QAHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindView(String question, SimpleRatingBar.OnRatingBarChangeListener listener) {
-        questionTitle.setText(question);
+        questionTitle.setText(question + "指数:");
         ratingbar.setOnRatingBarChangeListener(listener);
     }
 }

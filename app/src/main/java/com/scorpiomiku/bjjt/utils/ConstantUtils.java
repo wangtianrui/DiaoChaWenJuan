@@ -7,4 +7,6 @@ package com.scorpiomiku.bjjt.utils;
 public class ConstantUtils {
     public static String host = "http://10.0.2.2:5000";
     public static boolean isFirst = true;
+    public static int totalAudioNumber = 9;
+    public static int lastIndex = 0;
 }

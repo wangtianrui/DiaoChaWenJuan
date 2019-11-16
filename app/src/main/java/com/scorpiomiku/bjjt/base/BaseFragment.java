@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.scorpiomiku.bjjt.utils.MessageUtils;
+import com.scorpiomiku.bjjt.utils.WebUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Response;
 
@@ -24,6 +26,13 @@ import okhttp3.Response;
 public abstract class BaseFragment extends Fragment {
     private View myView;
     protected Handler handler;
+    protected WebUtils webUtils;
+    private HashMap<String, String> data = new HashMap<>();
+
+    public HashMap<String, String> getData() {
+        data.clear();
+        return data;
+    }
 
     @Nullable
     @Override
@@ -35,6 +44,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        webUtils = WebUtils.getInstance();
         initView();
         handler = initHandle();
         refreshData();
@@ -60,4 +70,5 @@ public abstract class BaseFragment extends Fragment {
         JsonObject jsonObject = (JsonObject) jsonParser.parse(result);
         return jsonObject;
     }
+
 }

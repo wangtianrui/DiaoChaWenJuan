@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.scorpiomiku.bjjt.R;
 import com.scorpiomiku.bjjt.base.BaseActivity;
 import com.scorpiomiku.bjjt.bean.MyAudio;
+import com.scorpiomiku.bjjt.bean.User;
 import com.scorpiomiku.bjjt.modules.fragments.SurveyFragment;
 import com.scorpiomiku.bjjt.utils.ConstantUtils;
 import com.scorpiomiku.bjjt.utils.MessageUtils;
@@ -50,11 +51,13 @@ public class SecondActivity extends BaseActivity {
 
 
     private MediaPlayer player;
+    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        user = (User) getIntent().getSerializableExtra("user");
     }
 
     @Override
@@ -69,6 +72,7 @@ public class SecondActivity extends BaseActivity {
                         break;
                     case 2:
                         adapter.notifyDataSetChanged();
+                        viewPager.setCurrentItem(ConstantUtils.lastIndex);
                         break;
                 }
 
@@ -85,7 +89,7 @@ public class SecondActivity extends BaseActivity {
         adapter = new FragmentPagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                return SurveyFragment.newInstance(questions, audios.get(position), position, player);
+                return SurveyFragment.newInstance(questions, audios.get(position), position, player, user);
             }
 
             @Override

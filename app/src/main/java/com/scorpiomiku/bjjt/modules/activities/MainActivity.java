@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.scorpiomiku.bjjt.R;
 import com.scorpiomiku.bjjt.base.BaseActivity;
 import com.scorpiomiku.bjjt.bean.User;
+import com.scorpiomiku.bjjt.utils.ConstantUtils;
 import com.scorpiomiku.bjjt.utils.MessageUtils;
 import com.scorpiomiku.bjjt.utils.RandomUtils;
 
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity {
                     case 1:
                         MessageUtils.logd(hasDone + "");
                         Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                        intent.putExtra("user", user);
                         startActivity(intent);
                         break;
                 }
@@ -139,6 +141,7 @@ public class MainActivity extends BaseActivity {
                         user = gson.fromJson(jsonObject.get("user"), User.class);
                         MessageUtils.logd(user.toString());
                         hasDone = jsonObject.get("answer_num").getAsInt();
+                        ConstantUtils.lastIndex = hasDone;
                         handler.sendEmptyMessage(1);
                     }
                 }

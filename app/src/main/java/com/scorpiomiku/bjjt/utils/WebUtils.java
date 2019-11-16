@@ -60,4 +60,11 @@ public class WebUtils {
         Call call = mClient.newCall(request);
         call.enqueue(callback);
     }
+
+    public void upAnswer(HashMap<String, String> hashMap, Callback callback) {
+        Request request = new Request.Builder().post(getRequestBody(hashMap))
+                .url(ConstantUtils.host + "/android/up_answer").build();
+        Call call = mClient.newCall(request);
+        call.enqueue(callback);
+    }
 }
